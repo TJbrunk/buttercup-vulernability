@@ -1,0 +1,14 @@
+{
+  "id": "bug-<UUID>",
+  "project": "vulnerable-c-demo",
+  "fuzzer": "libFuzzer",
+  "fuzz_target": "fuzzer",
+  "sanitizers": ["address", "undefined"],
+  "crash_file": "crash-<UUID>",
+  "binary": "vuln_bin",
+  "fuzzer_binary": "fuzzer",
+  "build_command": "bash build.sh",
+  "source_files": ["vulnerable.c", "harness.c"],
+  "reproduce_cmd": "./reproduce.sh crash-<UUID> > repro_output/sanitizer.log 2>&1",
+  "notes": "vulnerable_function uses strcpy into 16-byte stack buffer"
+}
