@@ -1,0 +1,50 @@
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 550342484
+INFO: Loaded 1 modules   (4 inline 8-bit counters): 4 [0x58f7d1c89ea8, 0x58f7d1c89eac), 
+INFO: Loaded 1 PC tables (4 PCs): 4 [0x58f7d1c89eb0,0x58f7d1c89ef0), 
+./fuzzer: Running 1 inputs 1 time(s) each.
+Running: /tmp/scratch/buffer-overflow-demo/crash_input.bin
+=================================================================
+==3848097==ERROR: AddressSanitizer: stack-buffer-overflow on address 0x7b8f90100030 at pc 0x58f7d1c02d18 bp 0x7ffdb77339d0 sp 0x7ffdb7733190
+WRITE of size 100 at 0x7b8f90100030 thread T0
+    #0 0x58f7d1c02d17 in __asan_memcpy (/tmp/scratch/buffer-overflow-demo/src/fuzzer+0xfed17) (BuildId: 2aebbee19cc97736ec222992fe1f209a88e752ef)
+    #1 0x58f7d1c43554 in process_input /tmp/scratch/buffer-overflow-demo/src/vulnerable.c:11:5
+    #2 0x58f7d1c43554 in LLVMFuzzerTestOneInput /tmp/scratch/buffer-overflow-demo/src/vulnerable.c:22:5
+    #3 0x58f7d1b50ca4 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long) (/tmp/scratch/buffer-overflow-demo/src/fuzzer+0x4cca4) (BuildId: 2aebbee19cc97736ec222992fe1f209a88e752ef)
+    #4 0x58f7d1b39dd6 in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long) (/tmp/scratch/buffer-overflow-demo/src/fuzzer+0x35dd6) (BuildId: 2aebbee19cc97736ec222992fe1f209a88e752ef)
+    #5 0x58f7d1b3f88a in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long)) (/tmp/scratch/buffer-overflow-demo/src/fuzzer+0x3b88a) (BuildId: 2aebbee19cc97736ec222992fe1f209a88e752ef)
+    #6 0x58f7d1b6a046 in main (/tmp/scratch/buffer-overflow-demo/src/fuzzer+0x66046) (BuildId: 2aebbee19cc97736ec222992fe1f209a88e752ef)
+    #7 0x7b8f9202a1c9 in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #8 0x7b8f9202a28a in __libc_start_main csu/../csu/libc-start.c:360:3
+    #9 0x58f7d1b349a4 in _start (/tmp/scratch/buffer-overflow-demo/src/fuzzer+0x309a4) (BuildId: 2aebbee19cc97736ec222992fe1f209a88e752ef)
+
+Address 0x7b8f90100030 is located in stack of thread T0 at offset 48 in frame
+    #0 0x58f7d1c4348f in LLVMFuzzerTestOneInput /tmp/scratch/buffer-overflow-demo/src/vulnerable.c:17
+
+  This frame has 1 object(s):
+    [32, 48) 'buffer.i' (line 8) <== Memory access at offset 48 overflows this variable
+HINT: this may be a false positive if your program uses some custom stack unwind mechanism, swapcontext or vfork
+      (longjmp and C++ exceptions *are* supported)
+SUMMARY: AddressSanitizer: stack-buffer-overflow (/tmp/scratch/buffer-overflow-demo/src/fuzzer+0xfed17) (BuildId: 2aebbee19cc97736ec222992fe1f209a88e752ef) in __asan_memcpy
+Shadow bytes around the buggy address:
+  0x7b8f900ffd80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7b8f900ffe00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7b8f900ffe80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7b8f900fff00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7b8f900fff80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x7b8f90100000: f1 f1 f1 f1 00 00[f3]f3 00 00 00 00 00 00 00 00
+  0x7b8f90100080: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7b8f90100100: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7b8f90100180: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7b8f90100200: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7b8f90100280: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
